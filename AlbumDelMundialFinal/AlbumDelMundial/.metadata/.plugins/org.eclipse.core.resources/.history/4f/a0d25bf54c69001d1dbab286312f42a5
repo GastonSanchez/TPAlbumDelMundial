@@ -1,0 +1,23 @@
+
+public class AlbumWeb extends Album {
+	
+	private Boolean CodigoPromocional; // Deberia ser un boolean?
+
+	public AlbumWeb(String[] paisesParticipantes) {
+		super(paisesParticipantes);
+		CodigoPromocional = true;
+	}
+	
+	public boolean TieneCodigoPromocinal() {
+		return CodigoPromocional;
+	}
+	
+	@Override
+	public void CanjearCodigoPromocional() {
+		CodigoPromocional = false;
+	}
+
+	
+
+	
+}

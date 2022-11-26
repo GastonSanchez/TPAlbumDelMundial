@@ -1,0 +1,18 @@
+
+public class AlbumTradicional extends Album{
+
+	
+	private Integer numSorteo;
+
+	public AlbumTradicional(String[] paisesParticipantes, Integer numSorteo) {
+		super(paisesParticipantes);
+		this.numSorteo = numSorteo;
+	}
+
+	@Override
+	public boolean TieneCodigoPromocinal() {
+		return false;
+	}
+	
+	
+}

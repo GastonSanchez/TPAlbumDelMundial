@@ -1,0 +1,130 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class Participante {
+
+	private int dni;
+	private String nombre;
+	private String tipoAlbum;
+	private ArrayList<Figurita> coleccionFiguritas;
+	private String premio;
+	private Album album;
+	
+	public Participante(int dni, String nombre, String tipoAlbum) {
+		this.dni = dni;
+		this.nombre = nombre;
+		this.tipoAlbum = tipoAlbum;
+		this.album = ElegirAlbum(tipoAlbum);
+		this.premio = new String();
+		this.coleccionFiguritas = new ArrayList<>();
+	}
+
+
+	private Album ElegirAlbum(String tipoAlbum) {//cambiar  a private?
+		Fabrica f = new Fabrica();
+		this.tipoAlbum = tipoAlbum;
+		if (tipoAlbum == "Web") {
+			return f.crearAlbumWeb();
+		} else if (tipoAlbum == "Tradicional") {
+			return f.crearAlbumTradicional();
+		} else {
+			return f.crearAlbumExtendido();
+		}
+	}
+	
+	public String ConsultarTipoAlbum() {
+		return tipoAlbum;
+	}
+	
+	public void AsignarPremio(String premio) {
+		this.premio = premio;
+	}
+	
+	public boolean AgregarFiguritaAColeccion(List<Figurita> sobre) {
+		try {
+			for (Figurita figu : sobre) {
+				coleccionFiguritas.add(figu);
+			}
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+	
+	public void CanjearCodigoPromocional(List<Figurita> sobre) {
+		album.CanjearCodigoPromocional();
+		AgregarFiguritaAColeccion(sobre);
+	}
+	
+	public Album ConsultarAlbum() {
+		return album;
+	}
+	
+	public List<String> PegarEnElAlbum () {
+		
+		this.album.pegarFiguritas(this.coleccionFiguritas);
+	}
+	
+	public boolean QuitarFiguritaDeColeccion(Figurita figurita) {
+		if(this.coleccionFiguritas.contains(figurita)) {
+			this.coleccionFiguritas.remove(figurita);
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	public void AsignarFiguritaRepetida(Figurita figurita) {
+		if(this.coleccionFiguritas.contains(figurita)) {
+			figurita.asignarRepetida();
+		}
+	}
+
+
+	public int ObtenerCodigoUnico() {
+		return this.album.getCodigo();
+		
+	}
+
+
+	public boolean TieneCodigoPromocional() {
+		
+		return this.album.TieneCodigoPromocinal();
+	}
+
+
+	public String getNombre() {
+		return nombre;
+	}
+
+
+	public String getPremio() {
+		return premio;
+	}
+
+
+	@Override
+	public String toString() {
+		return "DNI: " + dni + ", Nombre: " + nombre;
+	}
+
+	
+	public int BuscarRepetida() {
+
+		for (Figurita figurita : coleccionFiguritas) {
+			if (figurita.EstaRepetida()) {
+				return figurita.consultarValorBase();
+			}
+		}
+		return -1;
+	}
+
+
+	public int ConsultarCodigoSorteo() {
+		return album.getNumSorteo();
+	}
+
+	
+	
+}

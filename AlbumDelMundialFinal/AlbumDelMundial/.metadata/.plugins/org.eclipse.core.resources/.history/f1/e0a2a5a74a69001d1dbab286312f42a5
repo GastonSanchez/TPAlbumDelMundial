@@ -1,0 +1,25 @@
+
+public class FiguritaTop10 extends Figurita{
+	
+	private String tipoBalon;
+	private Integer anio;
+	
+	
+	public FiguritaTop10() {
+	}
+	public FiguritaTop10(String tipoBalon, Integer anio) {
+		super();
+		this.tipoBalon = tipoBalon;
+		this.anio = anio;
+	}
+	
+	public String consultarTipoBalon() {
+		return tipoBalon;
+	}
+	
+	public Integer consultarAnio() {
+		return anio;
+	}
+	
+
+}

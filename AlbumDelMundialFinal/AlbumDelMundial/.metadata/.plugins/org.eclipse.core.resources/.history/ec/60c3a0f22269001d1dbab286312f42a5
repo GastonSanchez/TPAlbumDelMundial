@@ -1,0 +1,47 @@
+import java.util.ArrayList;
+
+public abstract class Album {
+
+	private static int codigoUnico = 1;
+	private Integer codigo;
+	private Pais[] listaDePaises;
+	private boolean completado;
+
+	
+	public Album(String[] listaDePaises) {
+		this.codigo = codigoUnico;
+		for (int i = 0; i < listaDePaises.length; i++) {
+			this.listaDePaises[i]= new Pais(listaDePaises[i]);
+		}
+		this.completado = false;
+		codigoUnico = codigoUnico++;
+	}
+
+	public boolean consultarCompletado() {
+		return completado;
+	}
+
+	public Pais[] consultarListaDePaises() {
+		return listaDePaises;
+	}
+
+	public void pegarFiguritas(ArrayList<Figurita> figuritas) {
+
+	}
+	public void marcarCompletado() {
+		boolean completo = true;
+		for (int i = 0; i < listaDePaises.length; i++) {
+			completo = completo && listaDePaises[i] !=null;
+		}
+		completado=completo;
+	}
+
+	public Integer getCodigo() {
+		return codigo;
+	}
+
+	public abstract boolean TieneCodigoPromocinal();
+
+	
+
+}

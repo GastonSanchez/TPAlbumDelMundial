@@ -1,0 +1,236 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class AlbumDelMundial implements IAlbumDelMundial {
+	
+	private ArrayList<Pais> listaDePaises;
+	private HashMap<Integer,Participante> listaDeParticipantes;
+	private HashMap<Integer,Participante> listaDeParticipantesCompletos;
+	Fabrica fab;
+	private Tupla<Integer,Boolean> codigoGanadorSorteo;
+	
+	
+	public AlbumDelMundial(){
+		super();
+		listaDePaises = new ArrayList<Pais>();
+		listaDeParticipantes = new HashMap<>();
+		listaDeParticipantesCompletos = new HashMap<>();
+		codigoGanadorSorteo.setS1((int)Math.random()*100+1);
+		codigoGanadorSorteo.setS2(false);
+		
+	}
+
+	@Override
+	public int registrarParticipante(int dni, String nombre, String tipoAlbum) {
+		if (listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante ya esta registrado");
+		} else if (tipoAlbum != "Web" || tipoAlbum != "Tradicional" || tipoAlbum != "Extendido") {
+			throw new RuntimeException("El tipo de album seleccionado es incorrecto");
+		} else {
+			Participante p = new Participante(dni, nombre, tipoAlbum);
+			listaDeParticipantes.put(dni, p);
+			return p.ObtenerCodigoUnico();
+		}
+	}
+
+	@Override
+	public void comprarFiguritas(int dni) {
+		if (!listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante no se encuentra registrado");
+		} else {
+			fab = new Fabrica();
+			listaDeParticipantes.get(dni).AgregarFiguritaAColeccion(fab.generarSobre(4));
+		}
+	}
+
+	@Override
+	public void comprarFiguritasTop10(int dni) {
+		if (!listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante no se encuentra registrado");
+		} else if (listaDeParticipantes.get(dni).ConsultarTipoAlbum() != "Extendido") {
+			throw new RuntimeException("El Participante no tiene el album correcto para comprar este tipo de figuritas");
+		} else {
+			fab = new Fabrica();
+			listaDeParticipantes.get(dni).AgregarFiguritaAColeccion(fab.generarSobreTop10(4));
+		}
+	}
+
+	@Override
+	public void comprarFiguritasConCodigoPromocional(int dni) {
+		if (!listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante no se encuentra registrado");
+		} else if (!listaDeParticipantes.get(dni).TieneCodigoPromocional()) {
+			throw new RuntimeException("El Participante no tiene el album correcto para comprar este tipo de figuritas");
+		} else {
+			fab = new Fabrica();
+			listaDeParticipantes.get(dni).CanjearCodigoPromocional(fab.generarSobre(4));
+		}
+	}
+
+	@Override
+	public List<String> pegarFiguritas(int dni) {
+		if (!listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante no se encuentra registrado");
+		}
+		return listaDeParticipantes.get(dni).PegarEnElAlbum();
+		/** Busca entre las figuritas del participante cuales aún no están en el 
+		 * album y las asocia.
+		 * Devuelve una lista con las figuritas asociadas. 
+		 * De cada figurita se devuelve un string "$pais-$numeroJugador" */
+	}
+
+	@Override
+	public boolean llenoAlbum(int dni) {
+		if (!listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante no se encuentra registrado");
+		}
+		return listaDeParticipantesCompletos.containsKey(dni);
+		/**
+		 * Verifica si el participante identificado por dni ya completó el album.
+		 * Devuelve true si está completo, sino false.
+		 * Este metodo debe resolverse en O(1)
+		 * Si el participante no está registrado, se debe lanzar una excepción.
+		 */
+	}
+
+	@Override
+	public String aplicarSorteoInstantaneo(int dni) {
+		if (!listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante no se encuentra registrado");
+		} else if(listaDeParticipantes.get(dni).ConsultarTipoAlbum()!= "Tradicional") {
+			throw new RuntimeException("El Participante no tiene codigo para el sorteo");
+		} else if (codigoGanadorSorteo.getS2()) {
+			throw new RuntimeException("El sorteo ya tiene un ganador");
+		} else {
+			if(listaDeParticipantes.get(dni).getCodigoSorteo() == codigoGanadorSorteo) {
+				listaDeParticipantes.get(dni).AsignarPremio();
+				return listaDeParticipantes.get(dni).getPremio();
+			} else {
+				return "El participante no gano el sorteo";
+			}
+		}
+		/**
+		 * Realiza el sorteo instantaneo con el codigo asociado al album 
+		 * tradicional del participante y devuelve algun premio al azar.
+		 *  
+		 * Si el participante no está registrado, se debe lanzar una excepción.
+		 * Si no tiene codigo para el sorteo o ya fue sorteado, se debe lanzar
+		 * una excepcion.
+		 */
+	}
+
+	@Override
+	public int buscarFiguritaRepetida(int dni) {
+		if (!listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante no se encuentra registrado");
+		} else {
+			return listaDeParticipantes.get(dni).BuscarRepetida();
+		}
+		/**
+		 * Busca si el participante tiene alguna figurita repetida y devuelve 
+		 * el codigo de la primera que encuentre.
+		 * Si no encuentra ninguna, devuelve el codigo -1. 
+		 *  
+		 * Si el participante no está registrado, se debe lanzar una excepción.
+		 */
+	}
+
+	@Override
+	public boolean intercambiar(int dni, int codFigurita) {
+		// TODO Auto-generated method stub
+		return false;
+		/**
+		 * Dado el dni de un participante A y el codigo de una figurita, 
+		 * se busca entre los participantes con mismo tipo de album 
+		 * si alguno tiene repetida alguna figurita que le falte al participante A 
+		 * con un valor menor o igual al de la figurita a cambiar.
+		 * En caso de encontrar alguno, realiza el intercambio y devuelve true.
+		 * Si no se encuentra ninguna para cambiar, devuelve false.
+		 * 
+		 * 
+		 * Si el participante no está registrado o no es dueño de la figurita a 
+		 * cambiar, se debe lanzar una excepción.
+		 */
+	}
+
+	@Override
+	public boolean intercambiarUnaFiguritaRepetida(int dni) {
+		// TODO Auto-generated method stub
+		return false;
+		/**
+		 * Dado el dni de un participante, busca una figurita repetida e intenta 
+		 * intercambierla
+		 * Devuelve true si pudo intercambiarla. Sino, devuelve false.
+		 * 
+		 * Si el participante no está registrado, se debe lanzar una excepción.
+		 */
+	}
+
+	@Override
+	public String darNombre(int dni) {
+		if (!listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante no se encuentra registrado");
+		}
+		return listaDeParticipantes.get(dni).getNombre();
+		/**
+		 * Dado el dni de un participante, se devuelve el nombre del mismo.
+		 * 
+		 * Si el participante no está registrado, se debe lanzar una excepción.
+		 */
+	}
+
+	@Override
+	public String darPremio(int dni) {
+		if (!listaDeParticipantes.containsKey(dni)) {
+			throw new RuntimeException("El Participante no se encuentra registrado");
+		}else if (!listaDeParticipantesCompletos.containsKey(dni)) {
+			throw new RuntimeException("El Participante no completo el album");
+		}
+		
+		return listaDeParticipantes.get(dni).getPremio();
+		/**
+		 * Dado el dni de un participante, devuelve el premio correspondiente 
+		 * por llenar el album.
+		 * 
+		 * Si el participante no está registrado, se debe lanzar una excepcion.
+		 * Si no tiene el album completo, se debe lanzar una excepcion.
+		 */
+	}
+
+	@Override
+	public String listadoDeGanadores() {
+		String ganadores = new String();
+		for (Participante participante : listaDeParticipantesCompletos.values()) {
+					ganadores.concat(participante.toString()+", Premio: "+participante.getPremio());
+				}
+		return ganadores;
+		/**
+		 * Devuelve un string con la lista de todos los participantes que 
+		 * tienen su album completo y el premio que les corresponde.
+		 * El listado debe respetar el siguiente formato para cada ganador:
+		 *     " - ($dni) $nombre: $premio"
+		 */
+	}
+
+	@Override
+	public List<String> participantesQueCompletaronElPais(String nombrePais) {
+		ArrayList<String> participantes = new ArrayList<>();
+		for (Participante participante : listaDeParticipantes.values()) {
+			for (Pais pais : participante.ConsultarAlbum().consultarListaDePaises()) {
+				if(pais.consultarNombre().equals(nombrePais) && pais.consultarCompletado()) {
+					participantes.add(participante.toString()+", Album: "+participante.ConsultarTipoAlbum());
+				}
+			}
+		}
+		return participantes;
+		/**
+		 * Devuelve una lista con todos los participantes que llenaron el pais
+		 * pasado por parametro.
+		 * 
+		 * De cada participante se devuelve el siguiente String: 
+		 *     "($dni) $nombre: $tipoAlbum"
+		 */
+	}
+
+}

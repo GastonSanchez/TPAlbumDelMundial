@@ -1,0 +1,6 @@
+INDEX VERSION 1.131+C:\Users\Gaston\Documents\GitHub\TPAlbumDelMundial\AlbumDelMundialFinal\AlbumDelMundial\.metadata\.plugins\org.eclipse.jdt.core
+3857697984.index
+1865797976.index
+2325667050.index
+2306457330.index
+2128575829.index

@@ -1,0 +1,59 @@
+
+public class Figurita {
+
+	private Integer numero;
+	private Integer valorBase;
+	private String nombreDelPais;
+	private String nombreJugador; //TODO: sacar?
+	private double valorFinal;
+	private boolean pegada;
+	private boolean repetida;
+	
+	
+	
+	public Figurita() {
+		pegada = false;
+	}
+
+	public double obtenerValorFinal() {
+		return valorFinal;
+	}
+	
+	public void marcarComoPegada() {
+		pegada=true;
+	}
+	
+	public void registrarValorFinal(double valor) {
+		valorFinal=valor;
+	}
+	
+	public int consultarValorBase() {
+		return valorBase;
+	}
+	
+	public boolean consultarRepetida() {
+		return repetida;
+	}
+	
+	public void asignarRepetida() {
+		repetida=true;
+	}
+
+	public Integer consultarNumero() {
+		return numero;
+	}
+
+
+	public String consultarNombreDelPais() {
+		return nombreDelPais;
+	}
+
+	public boolean EstaRepetida() {
+		return repetida;
+	}
+
+	
+	
+	
+	
+}
